@@ -1,0 +1,67 @@
+# IMPORTANT: this VPS already hosts other production sites.
+# Insight is FULLY isolated:
+#   - listens ONLY on 127.0.0.1:8787 (localhost), never on 80/443
+#   - dedicated Docker network "insight", dedicated volumes
+#   - the reverse proxy ALREADY present on the VPS (Nginx/Apache/panel) proxies
+#     the public host -> 127.0.0.1:8787 and handles HTTPS.
+# Nothing here touches the existing sites.
+
+services:
+  app:
+    image: ghcr.io/digihold/insight-app:latest
+    container_name: insight-app
+    restart: unless-stopped
+    environment:
+      - PUBLIC_HOST=${PUBLIC_HOST}
+      - CLICKHOUSE_URL=http://clickhouse:8123
+      - CLICKHOUSE_DB=insight
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+      - SQLITE_PATH=/data/insight.db
+      # Analytics timezone for "Today", the heatmap, retention and revenue.
+      # Any IANA name (e.g. Europe/Zurich). Defaults to UTC.
+      - INSIGHT_TZ=${INSIGHT_TZ:-UTC}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - MAPBOX_TOKEN=${MAPBOX_TOKEN}
+      # Read-only CLI token; empty (unset) disables the API entirely.
+      - INSIGHT_API_TOKEN=${INSIGHT_API_TOKEN:-}
+      # Public read-only demo at /demo for this one site id (revenue hidden).
+      # Empty disables the demo entirely.
+      - DEMO_SITE_ID=${DEMO_SITE_ID:-}
+    volumes:
+      - app_data:/data
+    depends_on:
+      - clickhouse
+    ports:
+      - "127.0.0.1:8787:3000"   # localhost ONLY
+    networks:
+      - insight
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:24-alpine
+    container_name: insight-clickhouse
+    restart: unless-stopped
+    environment:
+      - CLICKHOUSE_DB=insight
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=${CLICKHOUSE_PASSWORD}
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+      - ./clickhouse/init:/docker-entrypoint-initdb.d:ro
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - insight
+    # No published port: ClickHouse stays internal, invisible from the Internet.
+
+volumes:
+  clickhouse_data:
+  app_data:
+
+networks:
+  insight:
+    name: insight
