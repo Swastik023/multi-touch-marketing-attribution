@@ -52,7 +52,10 @@ Optional connections, each one takes a few minutes and is covered in the [setup 
 You need a small Linux server (1 vCPU / 2 GB RAM is plenty) and a domain.
 
 ```bash
-# 1. On a fresh Ubuntu server: Docker, firewall, auto security updates
+# Prism Attribution — Cookieless Revenue Attribution & Web Telemetry Platform
+
+> A privacy-compliant web analytics and multi-touch revenue attribution platform featuring bot crawler isolation and real-time conversion path mapping.
+
 curl -fsSL https://raw.githubusercontent.com/DigiHold/insight/main/scripts/provision.sh | bash
 
 # 2. Get the code and configure it
