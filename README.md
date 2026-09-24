@@ -56,10 +56,10 @@ You need a small Linux server (1 vCPU / 2 GB RAM is plenty) and a domain.
 
 > A privacy-compliant web analytics and multi-touch revenue attribution platform featuring bot crawler isolation and real-time conversion path mapping.
 
-curl -fsSL https://raw.githubusercontent.com/DigiHold/insight/main/scripts/provision.sh | bash
+curl -fsSL https://raw.githubusercontent.com/swastik-agnihotri/prism-attribution/main/scripts/provision.sh | bash
 
 # 2. Get the code and configure it
-git clone https://github.com/DigiHold/insight /opt/insight && cd /opt/insight
+git clone https://github.com/swastik-agnihotri/prism-attribution /opt/insight && cd /opt/insight
 cp .env.example .env
 nano .env        # set ADMIN_EMAIL, ADMIN_PASSWORD, AUTH_SECRET, CLICKHOUSE_PASSWORD
 
