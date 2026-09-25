@@ -52,7 +52,9 @@ Optional connections, each one takes a few minutes and is covered in the [setup 
 You need a small Linux server (1 vCPU / 2 GB RAM is plenty) and a domain.
 
 ```bash
-# Prism Attribution — Cookieless Revenue Attribution & Web Telemetry Platform
+# Cookieless Multi-Touch Marketing Attribution Platform
+
+> A cookieless privacy-compliant analytics platform with multi-touch revenue attribution and AI crawler detection.
 
 > A privacy-compliant web analytics and multi-touch revenue attribution platform featuring bot crawler isolation and real-time conversion path mapping.
 
